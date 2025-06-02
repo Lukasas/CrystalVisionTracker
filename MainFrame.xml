@@ -1,0 +1,104 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
+..\..\FrameXML\UI.xsd">
+	<Script file="Core.lua" />
+
+<!--
+*******************************************************************************
+	Templates
+*******************************************************************************
+-->
+
+	<Frame name="CVT_Frame" movable="False" hidden="True" parent="UIParent">
+		<Size x="250" y="180" />
+		<Anchors>
+			<Anchor point="LEFT" />
+		</Anchors>
+		<Layers>
+			<Layer>
+				<FontString name="CVT_TXT1" font="Fonts\FRIZQT__.TTF" text="A" justifyH="LEFT" justifyV="TOP">
+					<Color r="1" g="0" b="0" a="1"/>
+					<FontHeight val="30"/>
+					<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parent" x="0" y="0" />
+					</Anchors>
+					<Shadow>
+						<Offset x="5" y="0" />
+						<Color r="0" g="0" b="0" a="1"/>
+					</Shadow>
+				</FontString>
+				<FontString name="CVT_TXT2" font="Fonts\FRIZQT__.TTF" text="" justifyH="LEFT" justifyV="TOP">
+					<Color r="1" g="0" b="0" a="1"/>
+					<FontHeight val="30"/>
+					<Anchors>
+					<Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT"  relativeTo="CVT_TXT1" x="0" y="-8" />
+					</Anchors>
+					<Shadow>
+						<Offset x="5" y="0" />
+						<Color r="0" g="0" b="0" a="1"/>
+					</Shadow>
+				</FontString>
+				<FontString name="CVT_TXT3" font="Fonts\FRIZQT__.TTF" text="" justifyH="LEFT" justifyV="TOP">
+					<Color r="1" g="0" b="0" a="1"/>
+					<FontHeight val="30"/>
+					<Anchors>
+					<Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT"  relativeTo="CVT_TXT2" x="0" y="-8" />
+					</Anchors>
+					<Shadow>
+						<Offset x="5" y="0" />
+						<Color r="0" g="0" b="0" a="1"/>
+					</Shadow>
+				</FontString>
+				<FontString name="CVT_TXT4" font="Fonts\FRIZQT__.TTF" text="" justifyH="LEFT" justifyV="TOP">
+					<Color r="1" g="0" b="0" a="1"/>
+					<FontHeight val="30"/>
+					<Anchors>
+					<Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT"  relativeTo="CVT_TXT3" x="0" y="-8" />
+					</Anchors>
+					<Shadow>
+						<Offset x="5" y="0" />
+						<Color r="0" g="0" b="0" a="1"/>
+					</Shadow>
+				</FontString>
+				<FontString name="CVT_TXT5" font="Fonts\FRIZQT__.TTF" text="" justifyH="LEFT" justifyV="TOP">
+					<Color r="1" g="0" b="0" a="1"/>
+					<FontHeight val="30"/>
+					<Anchors>
+					<Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT"  relativeTo="CVT_TXT4" x="0" y="-8" />
+					</Anchors>
+					<Shadow>
+						<Offset x="5" y="0" />
+						<Color r="0" g="0" b="0" a="1"/>
+					</Shadow>
+				</FontString>
+			</Layer>
+		</Layers>
+		<Frames>
+
+		</Frames>
+
+		<Scripts>
+			<OnLoad>
+				self:RegisterForDrag("LeftButton")
+				self:RegisterEvent("UNIT_SPELLCAST_SUCCEEDED")
+				self:RegisterEvent("ZONE_CHANGED_NEW_AREA")
+				self:RegisterEvent("CHAT_MSG_ADDON")
+				self:EnableMouse()
+				CVT_OnLoad()
+			</OnLoad>
+			<OnUpdate function="CVT_OnUpdateFunction" />
+			<OnEvent function="CVT_OnEventFunction" />
+			<OnDragStart>
+				if self:IsMovable() then
+					self:StartMoving();
+				end
+			</OnDragStart>
+			<OnDragStop>
+				if self:IsMovable() then
+					self:StopMovingOrSizing();
+					CVT_SavePosition();
+				end
+			</OnDragStop>
+		</Scripts>
+	</Frame>
+
+</Ui>

@@ -1,0 +1,8 @@
+## Interface: 110107
+## Title: Crystal Vision Tracker
+## Notes: Tracking Horrific Vision Crystals
+## SavedVariablesPerCharacter: AddonPositionOffsets
+## Author: Lukasas
+## Version: 1.6.2
+
+MainFrame.xml
