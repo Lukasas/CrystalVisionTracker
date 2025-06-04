@@ -93,6 +93,66 @@
 					</Layer>
 				</Layers>
 			</Frame>
+			<Frame name="CVT_VIAL_Frame" parent="CVT_Frame">
+				<Size x="250" y="50" />
+				<Anchors>
+					<Anchor point="LEFT" />
+				</Anchors>
+				<Layers>
+					<Layer>
+						<FontString name="CVT_VIAL_BLACK_TXT" inherits="CVT_FontTemplate" text="Black Vial:">
+							<Anchors>
+								<Anchor point="BOTTOMLEFT" relativeTo="CVT_Frame" x="0" y="0" />
+							</Anchors>
+						</FontString>
+						<FontString name="CVT_VIAL_BLACK_TXT_VAL" inherits="CVT_FontTemplate" text="Unknown">
+							<Anchors>
+								<Anchor point="BOTTOMLEFT" relativePoint="BOTTOMRIGHT" relativeTo="CVT_VIAL_BLACK_TXT" x="40" y="0" />
+							</Anchors>
+						</FontString>
+						<FontString name="CVT_VIAL_GREEN_TXT" inherits="CVT_FontTemplate" text="Green Vial:">
+							<Anchors>
+								<Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT"  relativeTo="CVT_VIAL_BLACK_TXT" x="0" y="-8" />
+							</Anchors>
+						</FontString>
+						<FontString name="CVT_VIAL_GREEN_TXT_VAL" inherits="CVT_FontTemplate" text="Unknown">
+							<Anchors>
+								<Anchor point="TOP" relativePoint="BOTTOM" relativeTo="CVT_VIAL_BLACK_TXT_VAL" x="0" y="-8" />
+							</Anchors>
+						</FontString>
+						<FontString name="CVT_VIAL_RED_TXT" inherits="CVT_FontTemplate" text="Red Vial:">
+							<Anchors>
+								<Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT"  relativeTo="CVT_VIAL_GREEN_TXT" x="0" y="-8" />
+							</Anchors>
+						</FontString>
+						<FontString name="CVT_VIAL_RED_TXT_VAL" inherits="CVT_FontTemplate" text="Unknown">
+							<Anchors>
+								<Anchor point="TOP" relativePoint="BOTTOM" relativeTo="CVT_VIAL_GREEN_TXT_VAL" x="0" y="-8" />
+							</Anchors>
+						</FontString>
+						<FontString name="CVT_VIAL_BLUE_TXT" inherits="CVT_FontTemplate" text="Blue Vial:">
+							<Anchors>
+								<Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT"  relativeTo="CVT_VIAL_RED_TXT" x="0" y="-8" />
+							</Anchors>
+						</FontString>
+						<FontString name="CVT_VIAL_BLUE_TXT_VAL" inherits="CVT_FontTemplate" text="Unknown">
+							<Anchors>
+								<Anchor point="TOP" relativePoint="BOTTOM" relativeTo="CVT_VIAL_RED_TXT_VAL" x="0" y="-8" />
+							</Anchors>
+						</FontString>
+						<FontString name="CVT_VIAL_PURPLE_TXT" inherits="CVT_FontTemplate" text="Purple Vial:">
+							<Anchors>
+								<Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT"  relativeTo="CVT_VIAL_BLUE_TXT" x="0" y="-8" />
+							</Anchors>
+						</FontString>
+						<FontString name="CVT_VIAL_PURPLE_TXT_VAL" inherits="CVT_FontTemplate" text="Unknown">
+							<Anchors>
+								<Anchor point="TOP" relativePoint="BOTTOM" relativeTo="CVT_VIAL_BLUE_TXT_VAL" x="0" y="-8" />
+							</Anchors>
+						</FontString>
+					</Layer>
+				</Layers>
+			</Frame>
 		</Frames>
 
 		<Scripts>
@@ -102,6 +162,10 @@
 				self:RegisterEvent("UNIT_SPELLCAST_SUCCEEDED")
 				self:RegisterEvent("ZONE_CHANGED_NEW_AREA")
 				self:RegisterEvent("CHAT_MSG_ADDON")
+				self:RegisterEvent("WORLD_CURSOR_TOOLTIP_UPDATE")
+				self:RegisterEvent("UPDATE_MOUSEOVER_UNIT")
+				self:RegisterEvent("GLOBAL_MOUSE_DOWN")
+				self:RegisterEvent("GLOBAL_MOUSE_UP")
 				self:EnableMouse()
 				CVT_OnLoad()
 			</OnLoad>

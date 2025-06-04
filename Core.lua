@@ -34,6 +34,10 @@ local STORMWIND_BOUNDRIES = {
 	{ {58.1, 83.3}, {53.0, 71.8}, {50.8, 74.1}, {47.5, 72.9}, {38.8, 79.2}, {47.1, 98.8} }
 }
 
+local STORMWIND_POISON_POS = {
+	{ 51.75, 58.52 }
+}
+
 local OG_FULL_LOC = {'Valley of Strength', 'Valley of Spirits', 'Valley of Wisdom', 'The Drag', 'Valley of Honor'}
 local ORGRIMMAR_LOCATIONS = { 'VSTRENGTH', 'SPIRITS', 'WISDOM', 'DRAG', 'HONOR'}
 local ORGRIMMAR_POS = {
@@ -66,10 +70,43 @@ local ORGRIMMAR_BOUNDRIES = {
 	{ {59.2, 26.0}, {60.4, 43.4}, {67.4, 57.4}, {84.4, 40.0}, {72.6, 24.0} },
 }
 
+local VIAL_NAMES_LOC = {
+	black="Vial of Mysterious Black Liquid",
+	green="Vial of Mysterious Green Liquid",
+	red="Vial of Mysterious Red Liquid",
+	blue="Vial of Mysterious Blue Liquid",
+	purple="Vial of Mysterious Purple Liquid"
+}
+
+local VIAL_NAMES_SHORT_LOC = {
+	black="Black Vial",
+	green="Green Vial",
+	red="Red Vial",
+	blue="Blue Vial",
+	purple="Purple Vial"
+}
+
+local VIAL_VAL_STRINGS = {
+	[0] = "Unknown",
+	[1] = "Poison",
+	[2] = "Sanity",
+	[3] = "Defensive",
+	[4] = "Healing",
+	[5] = "Fire Breath"
+}
+
 local TEXT_COLORS = {
 	{255, 0, 0}, -- 0
 	{200, 78, 8}, -- 1
 	{0, 255, 0} -- 2
+}
+
+local VIAL_COLORS = {
+	{0.0, 0.0, 0.0}, -- black
+	{0.2, 0.9, 0.2}, -- green
+	{0.9, 0.2, 0.2}, -- red
+	{0.2, 0.2, 0.9}, -- blue
+	{0.7, 0.2, 0.9} -- purple
 }
 
 local SIZES = {
@@ -87,6 +124,9 @@ local CHESTS = {0, 0, 0, 0, 0}
 local CHESTS_IN_ZONE = {3, 2, 2, 2, 2}
 local ZONE = 'SW'
 
+local VIAL_SET = false
+local CAN_CHECK_VIAL = false
+
 local movable = false
 SLASH_CSW1 = "/csw"
 SLASH_COG1 = "/cog"
@@ -94,6 +134,7 @@ SLASH_CHIDE1 = "/chide"
 SLASH_CTFIRE1 = "/ctfire"
 SLASH_CMOVE1 = "/cmove"
 SLASH_CHELP1 = "/chelp"
+SLASH_CTINTER1 = "/ctint"
 
 ---------------- Timers ----------------
 
@@ -187,7 +228,7 @@ local function CountPickedChest()
 	for i=1,5 do
 		if IsPointInPolygon(bounds[i], GetPlayerPosition()) then
 			CHESTS[i] = CHESTS[i] + 1
-			-- C_ChatInfo.SendAddonMessage("CVTPrivChat", "CHESTS:" .. i, "INSTANCE_CHAT")
+			C_ChatInfo.SendAddonMessage("CVTPrivChat", "CHESTS:" .. i, "INSTANCE_CHAT")
 		end
 	end
 end
@@ -252,9 +293,13 @@ end
 local function LoadTextFrames()
 	CVT_TXT_FRAMES = { CVT_TXT1, CVT_TXT2, CVT_TXT3, CVT_TXT4, CVT_TXT5 }
 	CVT_TXT_VALS_FRAMES = { CVT_TXT1_VALS, CVT_TXT2_VALS, CVT_TXT3_VALS, CVT_TXT4_VALS, CVT_TXT5_VALS }
+	CVT_VIAL_TXT_FRAMES = { CVT_VIAL_BLACK_TXT, CVT_VIAL_GREEN_TXT, CVT_VIAL_RED_TXT, CVT_VIAL_BLUE_TXT, CVT_VIAL_PURPLE_TXT }
+	CVT_VIAL_TXT_VALS_FRAMES = { CVT_VIAL_BLACK_TXT_VAL, CVT_VIAL_GREEN_TXT_VAL, CVT_VIAL_RED_TXT_VAL, CVT_VIAL_BLUE_TXT_VAL, CVT_VIAL_PURPLE_TXT_VAL }
 end
 
 local function CVT_HideF()
+	CAN_CHECK_VIAL = false
+	VIAL_SET = false
 	for i=1,5 do
 		CVT_TXT_FRAMES[i]:SetText('')
 	end
@@ -272,12 +317,112 @@ local function CVT_ShowF()
 		CVT_Frame:ClearAllPoints()
 		CVT_Frame:SetPoint(unpack(AddonPositionOffsets))
 	end
+
+	EnablePoisonVialCheck = EnablePoisonVialCheck or true
+	PoisonVialCheckMouseover = PoisonVialCheckMouseover or false
 end
 
 function CVT_SavePosition()
 	local point, relativeTo, relativePoint, xOfs, yOfs = CVT_Frame:GetPoint(1)
 	AddonPositionOffsets = {point, relativeTo, relativePoint, xOfs, yOfs}
 	-- print("saved")
+end
+
+local function GetMouseoverTooltipText()
+	local data = C_TooltipInfo.GetWorldCursor()
+	local text = ""
+	if data then
+		for i = 1, #data.lines do
+			text = data.lines[i].leftText or ""
+			if data.lines[i].rightText then
+				text = text .. " " .. data.lines[i].rightText
+			end
+		end
+	end
+	return text
+end
+
+local function CheckIfVial()
+	if not CAN_CHECK_VIAL then
+		-- print("You are not mousing over vial.")
+		return
+	end
+	if VIAL_SET then
+		-- print("Vial already set, skipping check.")
+		return
+	end
+
+	-- Vial doesn't exist, so this is some other object
+	if UnitExists("mouseover") then
+		-- print("You are mousing over ",UnitName("mouseover")," not a 'vial' object.")
+		return
+	end
+
+	local text = GetMouseoverTooltipText()
+
+	-- 0 == unknown, 1 == poison, 2 == sanity, 3 == defensive, 4 == healing, 5 == breath
+	local vials = { 0, 0, 0, 0, 0 } -- black, green, red, blue, purple
+	if text == VIAL_NAMES_LOC.black then
+		-- print("Found the " .. VIAL_NAMES_LOC.black .. "!")
+		vials = {1, 2, 3, 4, 5}
+	elseif text == VIAL_NAMES_LOC.green then
+		-- print("Found the " .. VIAL_NAMES_LOC.green .. "!")
+		vials = {5, 1, 2, 3, 4}
+	elseif text == VIAL_NAMES_LOC.red then
+		-- print("Found the " .. VIAL_NAMES_LOC.red .. "!")
+		vials = {4, 5, 1, 2, 3}
+	elseif text == VIAL_NAMES_LOC.blue then
+		-- print("Found the " .. VIAL_NAMES_LOC.blue .. "!")
+		vials = {2, 3, 4, 5, 1}
+	elseif text == VIAL_NAMES_LOC.purple then
+		-- print("Found the " .. VIAL_NAMES_LOC.purple .. "!")
+		vials = {1, 2, 3, 4, 5}
+	else
+		-- print("Unknown item text: ", text)
+		CAN_CHECK_VIAL = false
+		return
+	end
+	VIAL_SET = true
+	CAN_CHECK_VIAL = false
+	-- print("Black: ", vials[1], " Green: ", vials[2], " Red: ", vials[3], " Blue: ", vials[4], " Purple: ", vials[5])
+
+	for i=1,5 do
+		CVT_VIAL_TXT_FRAMES[i]:SetTextColor(VIAL_COLORS[i][1], VIAL_COLORS[i][2], VIAL_COLORS[i][3])
+		CVT_VIAL_TXT_VALS_FRAMES[i]:SetText(VIAL_VAL_STRINGS[vials[i]])
+		CVT_VIAL_TXT_VALS_FRAMES[i]:SetTextColor(TEXT_COLORS[3][1], TEXT_COLORS[3][2], TEXT_COLORS[3][3])
+
+		-- CVT_VIAL_TXT_FRAMES[i]:SetTextHeight(size)
+		-- CVT_VIAL_TXT_VALS_FRAMES[i]:SetTextHeight(size)
+	end
+
+end
+
+local function IsMouseOverPoisonUnit(unitName)
+	local unitTarget = "mouseover"
+	if UnitExists(unitTarget) then
+		local name = UnitName(unitTarget)
+		if name then
+			-- print("You are mousing over: ", name)
+			if name == unitName then
+				CAN_CHECK_VIAL = true
+				-- if PoisonVialCheckMouseover then
+				-- 	-- print(unitName, " found! You can check the vial now.")
+				-- else
+				-- 	-- print("You clicked on the ", unitName)
+				-- end
+			else
+				CAN_CHECK_VIAL = false
+				-- if PoisonVialCheckMouseover then
+				-- 	-- print("You are not mousing over ", unitName, ", to check the vial.")
+				-- else
+				-- 	-- print("You have not clicked on the ", unitName)
+				-- end
+			end
+		else
+			-- print("You are not mousing over any unit.")
+			CAN_CHECK_VIAL = false
+		end
+	end
 end
 
 ---------------- Buttons Click ----------------
@@ -319,6 +464,43 @@ function events:UNIT_SPELLCAST_SUCCEEDED(unitTarget, castGUID, spellID)
 	end
 end
 
+function events:GLOBAL_MOUSE_DOWN(mouseButton)
+	if EnablePoisonVialCheck then
+		if mouseButton == "LeftButton" then
+			local objectName = GetMouseoverTooltipText()
+			for _, value in pairs(VIAL_NAMES_LOC) do
+				if objectName == value then
+					-- print("You clicked on the " .. objectName .. ".")
+					CAN_CHECK_VIAL = true
+					return
+				end
+			end
+		end
+	end
+end
+
+function events:GLOBAL_MOUSE_UP(mouseButton)
+	if EnablePoisonVialCheck then
+		if mouseButton == "LeftButton" then
+			CheckIfVial()
+		end
+	end
+end
+
+function events:WORLD_CURSOR_TOOLTIP_UPDATE(itemType)
+	if EnablePoisonVialCheck and PoisonVialCheckMouseover then
+		if itemType == Enum.WorldCursorAnchorType.Cursor then
+			CheckIfVial()
+		end
+	end
+end
+
+function events:UPDATE_MOUSEOVER_UNIT()
+	if EnablePoisonVialCheck and PoisonVialCheckMouseover then
+		IsMouseOverPoisonUnit("Morgan Pestle")
+	end
+end
+
 function events:ZONE_CHANGED_NEW_AREA()
 	local zone = GetMinimapZoneText()
 
@@ -356,6 +538,8 @@ function events:CHAT_MSG_ADDON(prefix, message, channel, sender, target, zoneCha
 			if index and index >= 1 and index <= 5 then
 				CHESTS[index] = CHESTS[index] + 1
 			end
+		elseif msgType == "POISON" then
+
 		end
 	end
 end
