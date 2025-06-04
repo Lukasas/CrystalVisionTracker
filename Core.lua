@@ -78,6 +78,7 @@ local SIZES = {
 	30 -- In
 }
 local CVT_TXT_FRAMES = nil
+local CVT_TXT_VALS_FRAMES = nil
 
 ---------------- Globals  ----------------
 
@@ -209,7 +210,7 @@ local function PrintOutputTexts()
 	local tasks = GetTasksTable()
 	local taskName = ''
 	if table.getn(tasks) == 1 then
-		isInArea, isOnMap, numObjectives, taskName, displayAsObjective = GetTaskInfo(tasks[1])
+		local isInArea, isOnMap, numObjectives, taskName, displayAsObjective = GetTaskInfo(tasks[1])
 	end
 
 	for i=1,5 do
@@ -220,14 +221,18 @@ local function PrintOutputTexts()
 
 
 	for i=1,5 do
-		CVT_TXT_FRAMES[i]:SetText(ARR[i] .. ':  ' .. CRYSTALS[i] .. '/2 |TInterface\\ICONS\\inv_misc_gem_flamespessarite_02:14:14:0:0:16:16:0:16:0:16|t | |TInterface\\ICONS\\inv_misc_chest_azerite:14:14:0:0:16:16:0:16:0:16|t ' .. CHESTS[i] .. '/' .. CHESTS_IN_ZONE[i])
+		CVT_TXT_FRAMES[i]:SetText(ARR[i] .. ': ')
+		local size = nil
 		if lastZoneId == 0 then
-			CVT_TXT_FRAMES[i]:SetTextHeight(SIZES[2])
+			size = SIZES[2]
 		elseif lastZoneId == i then
-			CVT_TXT_FRAMES[i]:SetTextHeight(SIZES[3])
+			size = SIZES[3]
 		else
-			CVT_TXT_FRAMES[i]:SetTextHeight(SIZES[1])
+			size = SIZES[1]
 		end
+		CVT_TXT_FRAMES[i]:SetTextHeight(size)
+		CVT_TXT_VALS_FRAMES[i]:SetTextHeight(size)
+		CVT_TXT_VALS_FRAMES[i]:SetText(CRYSTALS[i] .. '/2 |TInterface\\ICONS\\inv_misc_gem_flamespessarite_02:0:0:0:0:16:16:0:16:0:16|t | |TInterface\\ICONS\\inv_misc_chest_azerite:0:0:0:0:16:16:0:16:0:16|t ' .. CHESTS[i] .. '/' .. CHESTS_IN_ZONE[i])
 
 		local CLidx = CRYSTALS[i]
 		if CLidx == nil then
@@ -240,11 +245,13 @@ local function PrintOutputTexts()
 
 		local CL = TEXT_COLORS[CLidx]
 		CVT_TXT_FRAMES[i]:SetTextColor(CL[1], CL[2], CL[3])
+		CVT_TXT_VALS_FRAMES[i]:SetTextColor(CL[1], CL[2], CL[3])
 	end
 end
 
 local function LoadTextFrames()
 	CVT_TXT_FRAMES = { CVT_TXT1, CVT_TXT2, CVT_TXT3, CVT_TXT4, CVT_TXT5 }
+	CVT_TXT_VALS_FRAMES = { CVT_TXT1_VALS, CVT_TXT2_VALS, CVT_TXT3_VALS, CVT_TXT4_VALS, CVT_TXT5_VALS }
 end
 
 local function CVT_HideF()
@@ -279,6 +286,18 @@ end
 
 ---------------- Events functions ----------------
 local events = {}
+
+function events:UNIT_AURA(unitTarget, updateInfo)
+	print(updateInfo.addedAuras)
+	print(updateInfo.updatedAuraInstanceIDs)
+	print(updateInfo.removedAuraInstanceIDs)
+	for k, v in pairs(updateInfo.updatedAuraInstanceIDs) do
+		print("Added aura: " .. v)
+		-- print("Added aura: " .. v.name .. " (" .. v.spellID .. ")")
+	end
+	print("----")
+end
+
 function events:UNIT_SPELLCAST_SUCCEEDED(unitTarget, castGUID, spellID)
 	if unitTarget == "player" then
 		if spellID == 143394 then
