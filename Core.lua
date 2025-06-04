@@ -73,9 +73,9 @@ local TEXT_COLORS = {
 }
 
 local SIZES = {
-	18, -- In different
-	24, -- In none
-	30 -- In
+	0.5, -- In different
+	0.6, -- In none
+	0.7 -- In
 }
 local CVT_TXT_FRAMES = nil
 local CVT_TXT_VALS_FRAMES = nil
@@ -230,8 +230,8 @@ local function PrintOutputTexts()
 		else
 			size = SIZES[1]
 		end
-		CVT_TXT_FRAMES[i]:SetTextHeight(size)
-		CVT_TXT_VALS_FRAMES[i]:SetTextHeight(size)
+		CVT_TXT_FRAMES[i]:SetTextScale(size)
+		CVT_TXT_VALS_FRAMES[i]:SetTextScale(size)
 		CVT_TXT_VALS_FRAMES[i]:SetText(CRYSTALS[i] .. '/2 |TInterface\\ICONS\\inv_misc_gem_flamespessarite_02:0:0:0:0:16:16:0:16:0:16|t | |TInterface\\ICONS\\inv_misc_chest_azerite:0:0:0:0:16:16:0:16:0:16|t ' .. CHESTS[i] .. '/' .. CHESTS_IN_ZONE[i])
 
 		local CLidx = CRYSTALS[i]
@@ -269,15 +269,15 @@ local function CVT_ShowF()
 	CVT_Frame:SetAlpha(1)
 	CVT_Frame:Show()
 	if AddonPositionOffsets then
-		CVT_Frame:ClearAllPoints();
+		CVT_Frame:ClearAllPoints()
 		CVT_Frame:SetPoint(unpack(AddonPositionOffsets))
 	end
 end
 
 function CVT_SavePosition()
-	local point, relativeTo, relativePoint, xOfs, yOfs = CVT_Frame:GetPoint(0)
+	local point, relativeTo, relativePoint, xOfs, yOfs = CVT_Frame:GetPoint(1)
 	AddonPositionOffsets = {point, relativeTo, relativePoint, xOfs, yOfs}
-	print("saved")
+	-- print("saved")
 end
 
 ---------------- Buttons Click ----------------
@@ -286,6 +286,8 @@ end
 
 ---------------- Events functions ----------------
 local events = {}
+
+local targetCrystalSpellCast = nil
 
 function events:UNIT_AURA(unitTarget, updateInfo)
 	print(updateInfo.addedAuras)
@@ -298,9 +300,17 @@ function events:UNIT_AURA(unitTarget, updateInfo)
 	print("----")
 end
 
+function events:UNIT_SPELLCAST_SENT(unit, target, castGUID, spellID)
+	if unit == "player" and spellID == 143394 then
+		if target == "Odd Crystal" then
+			targetCrystalSpellCast = castGUID
+		end
+	end
+end
+
 function events:UNIT_SPELLCAST_SUCCEEDED(unitTarget, castGUID, spellID)
 	if unitTarget == "player" then
-		if spellID == 143394 then
+		if targetCrystalSpellCast == castGUID and spellID == 143394 then
 			-- Picking up a crystal<>
 			CountPickedCrystal()
 		elseif spellID == 306608 then

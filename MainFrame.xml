@@ -20,69 +20,85 @@
 	<Frame name="CVT_Frame" movable="False" hidden="True" parent="UIParent">
 		<Size x="250" y="180" />
 		<Anchors>
-			<Anchor point="LEFT" />
+			<Anchor point="LEFT" x="5" />
 		</Anchors>
-		<Layers>
-			<Layer>
-				<FontString name="CVT_TXT1" inherits="CVT_FontTemplate">
-					<Anchors>
-						<Anchor point="TOPLEFT" relativeTo="$parent" x="0" y="0" />
-					</Anchors>
-				</FontString>
-				<FontString name="CVT_TXT1_VALS" inherits="CVT_FontTemplate">
-					<Anchors>
-						<Anchor point="TOPLEFT" relativePoint="TOPRIGHT" relativeTo="CVT_TXT1" x="5" y="0" />
-					</Anchors>
-				</FontString>
-				<FontString name="CVT_TXT2" inherits="CVT_FontTemplate">
-					<Anchors>
-						<Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT"  relativeTo="CVT_TXT1" x="0" y="-8" />
-					</Anchors>
-				</FontString>
-				<FontString name="CVT_TXT2_VALS" inherits="CVT_FontTemplate">
-					<Anchors>
-						<Anchor point="TOP" relativePoint="BOTTOM" relativeTo="CVT_TXT1_VALS" x="0" y="-8" />
-					</Anchors>
-				</FontString>
-				<FontString name="CVT_TXT3" inherits="CVT_FontTemplate">
-					<Anchors>
-						<Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT"  relativeTo="CVT_TXT2" x="0" y="-8" />
-					</Anchors>
-				</FontString>
-				<FontString name="CVT_TXT3_VALS" inherits="CVT_FontTemplate">
-					<Anchors>
-						<Anchor point="TOP" relativePoint="BOTTOM" relativeTo="CVT_TXT2_VALS" x="0" y="-8" />
-					</Anchors>
-				</FontString>
-				<FontString name="CVT_TXT4" inherits="CVT_FontTemplate">
-					<Anchors>
-						<Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT"  relativeTo="CVT_TXT3" x="0" y="-8" />
-					</Anchors>
-				</FontString>
-				<FontString name="CVT_TXT4_VALS" inherits="CVT_FontTemplate">
-					<Anchors>
-						<Anchor point="TOP" relativePoint="BOTTOM" relativeTo="CVT_TXT3_VALS" x="0" y="-8" />
-					</Anchors>
-				</FontString>
-				<FontString name="CVT_TXT5" inherits="CVT_FontTemplate">
-					<Anchors>
-						<Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT"  relativeTo="CVT_TXT4" x="0" y="-8" />
-					</Anchors>
-				</FontString>
-				<FontString name="CVT_TXT5_VALS" inherits="CVT_FontTemplate">
-					<Anchors>
-						<Anchor point="TOP" relativePoint="BOTTOM" relativeTo="CVT_TXT4_VALS" x="0" y="-8" />
-					</Anchors>
-				</FontString>
-			</Layer>
-		</Layers>
 		<Frames>
-
+			<Frame name="CVT_Frame_Texts" parent="CVT_Frame">
+				<Size x="110" y="180" />
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parent" x="0" y="0" />
+				</Anchors>
+				<Layers>
+					<Layer>
+						<FontString name="CVT_TXT1" inherits="CVT_FontTemplate">
+							<Anchors>
+								<Anchor point="TOPLEFT" relativeTo="$parent" x="0" y="0" />
+							</Anchors>
+						</FontString>
+						<FontString name="CVT_TXT2" inherits="CVT_FontTemplate">
+							<Anchors>
+								<Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT"  relativeTo="CVT_TXT1" x="0" y="-8" />
+							</Anchors>
+						</FontString>
+						<FontString name="CVT_TXT3" inherits="CVT_FontTemplate">
+							<Anchors>
+								<Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT"  relativeTo="CVT_TXT2" x="0" y="-8" />
+							</Anchors>
+						</FontString>
+						<FontString name="CVT_TXT4" inherits="CVT_FontTemplate">
+							<Anchors>
+								<Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT"  relativeTo="CVT_TXT3" x="0" y="-8" />
+							</Anchors>
+						</FontString>
+						<FontString name="CVT_TXT5" inherits="CVT_FontTemplate">
+							<Anchors>
+								<Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT"  relativeTo="CVT_TXT4" x="0" y="-8" />
+							</Anchors>
+						</FontString>
+					</Layer>
+				</Layers>
+			</Frame>
+			<Frame name="CVT_Frame_Values" parent="CVT_Frame">
+				<Size x="250" y="180" />
+				<Anchors>
+					<Anchor point="TOPLEFT" relativePoint="TOPRIGHT" relativeTo="CVT_Frame_Texts" />
+				</Anchors>
+				<Layers>
+					<Layer>
+						<FontString name="CVT_TXT1_VALS" inherits="CVT_FontTemplate">
+							<Anchors>
+								<Anchor point="TOP" relativeTo="$parent" x="0" y="0" />
+							</Anchors>
+						</FontString>
+						<FontString name="CVT_TXT2_VALS" inherits="CVT_FontTemplate">
+							<Anchors>
+								<Anchor point="TOP" relativePoint="BOTTOM" relativeTo="CVT_TXT1_VALS" x="0" y="-8" />
+							</Anchors>
+						</FontString>
+						<FontString name="CVT_TXT3_VALS" inherits="CVT_FontTemplate">
+							<Anchors>
+								<Anchor point="TOP" relativePoint="BOTTOM" relativeTo="CVT_TXT2_VALS" x="0" y="-8" />
+							</Anchors>
+						</FontString>
+						<FontString name="CVT_TXT4_VALS" inherits="CVT_FontTemplate">
+							<Anchors>
+								<Anchor point="TOP" relativePoint="BOTTOM" relativeTo="CVT_TXT3_VALS" x="0" y="-8" />
+							</Anchors>
+						</FontString>
+						<FontString name="CVT_TXT5_VALS" inherits="CVT_FontTemplate">
+							<Anchors>
+								<Anchor point="TOP" relativePoint="BOTTOM" relativeTo="CVT_TXT4_VALS" x="0" y="-8" />
+							</Anchors>
+						</FontString>
+					</Layer>
+				</Layers>
+			</Frame>
 		</Frames>
 
 		<Scripts>
 			<OnLoad>
 				self:RegisterForDrag("LeftButton")
+				self:RegisterEvent("UNIT_SPELLCAST_SENT")
 				self:RegisterEvent("UNIT_SPELLCAST_SUCCEEDED")
 				self:RegisterEvent("ZONE_CHANGED_NEW_AREA")
 				self:RegisterEvent("CHAT_MSG_ADDON")
