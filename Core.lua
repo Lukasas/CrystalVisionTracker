@@ -373,10 +373,10 @@ local function CheckIfVial()
 		vials = {4, 5, 1, 2, 3}
 	elseif text == VIAL_NAMES_LOC.blue then
 		-- print("Found the " .. VIAL_NAMES_LOC.blue .. "!")
-		vials = {2, 3, 4, 5, 1}
+		vials = {3, 4, 5, 1, 2}
 	elseif text == VIAL_NAMES_LOC.purple then
 		-- print("Found the " .. VIAL_NAMES_LOC.purple .. "!")
-		vials = {1, 2, 3, 4, 5}
+		vials = {2, 3, 4, 5, 1}
 	else
 		-- print("Unknown item text: ", text)
 		CAN_CHECK_VIAL = false
