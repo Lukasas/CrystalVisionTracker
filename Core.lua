@@ -102,7 +102,7 @@ local TEXT_COLORS = {
 }
 
 local VIAL_COLORS = {
-	{0.0, 0.0, 0.0}, -- black
+	{0.8, 0.8, 0.8}, -- black
 	{0.2, 0.9, 0.2}, -- green
 	{0.9, 0.2, 0.2}, -- red
 	{0.2, 0.2, 0.9}, -- blue
@@ -110,9 +110,9 @@ local VIAL_COLORS = {
 }
 
 local SIZES = {
-	0.5, -- In different
-	0.6, -- In none
-	0.7 -- In
+	0.9, -- In different
+	1, -- In none
+	1.1 -- In
 }
 local CVT_TXT_FRAMES = nil
 local CVT_TXT_VALS_FRAMES = nil
