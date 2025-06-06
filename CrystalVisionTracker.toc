@@ -3,7 +3,7 @@
 ## Notes: Tracking Horrific Vision Crystals
 ## SavedVariablesPerCharacter: AddonPositionOffsets, EnablePoisonVialCheck, PoisonVialCheckMouseover
 ## Author: Lukasas
-## Version: 1.6.2
+## Version: 1.6.3
 Core.lua
 MainFrame.xml
 Config.lua
