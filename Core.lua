@@ -432,7 +432,7 @@ end
 ---------------- Events functions ----------------
 local events = {}
 
-local targetCrystalSpellCast = nil
+local targetSpellCast = nil
 
 function events:UNIT_AURA(unitTarget, updateInfo)
 	print(updateInfo.addedAuras)
@@ -446,20 +446,23 @@ function events:UNIT_AURA(unitTarget, updateInfo)
 end
 
 function events:UNIT_SPELLCAST_SENT(unit, target, castGUID, spellID)
-	if unit == "player" and spellID == 143394 then
-		if target == "Odd Crystal" then
-			targetCrystalSpellCast = castGUID
+	if unit == "player" then
+		if spellID == 143394 and target == "Odd Crystal" then
+				targetSpellCast = castGUID
+		elseif spellID == 306608 and target == "Black Empire Cache" then
+				targetSpellCast = castGUID
 		end
 	end
 end
 
 function events:UNIT_SPELLCAST_SUCCEEDED(unitTarget, castGUID, spellID)
 	if unitTarget == "player" then
-		if targetCrystalSpellCast == castGUID and spellID == 143394 then
-			-- Picking up a crystal<>
-			CountPickedCrystal()
-		elseif spellID == 306608 then
-			CountPickedChest()
+		if targetSpellCast == castGUID then
+			if spellID == 143394 then
+				CountPickedCrystal()
+			elseif spellID == 306608 then
+				CountPickedChest()
+			end
 		end
 	end
 end
