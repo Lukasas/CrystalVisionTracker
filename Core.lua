@@ -1,5 +1,4 @@
 ---------------- Constants ----------------
-
 local MAX_PICKING_DISTANCE = 0.8
 
 local SW_FULL_LOC = {'Cathedral Square', 'Dwarven District', 'Old Town', 'Trade District', 'Mage Quarter'}
@@ -447,9 +446,9 @@ end
 
 function events:UNIT_SPELLCAST_SENT(unit, target, castGUID, spellID)
 	if unit == "player" then
-		if spellID == 143394 and target == "Odd Crystal" then
+		if spellID == 143394 and target == CVT['transl']['Odd Crystal'] then
 				targetSpellCast = castGUID
-		elseif spellID == 306608 and target == "Black Empire Cache" then
+		elseif spellID == 306608 and target == CVT['transl']['Black Empire Cache'] then
 				targetSpellCast = castGUID
 		end
 	end
@@ -508,17 +507,17 @@ function events:ZONE_CHANGED_NEW_AREA()
 	local zone = GetMinimapZoneText()
 
 	if IsRunning() == false then
-		if zone == "Vision of Orgrimmar" then
+		if zone == CVT['transl']['Vision of Orgrimmar'] then
 			CVT_ShowF()
 			ZONE = 'OG'
 			CRYSTALS = {0, 0, 0, 0, 0}
-		elseif zone == "Vision of Stormwind" then
+		elseif zone == CVT['transl']['Vision of Stormwind'] then
 			CVT_ShowF()
 			ZONE = 'SW'
 			CRYSTALS = {0, 0, 0, 0, 0}
 		end
 	else
-		if zone == "Chamber of Heart" or zone == "The Coreway" then
+		if zone == CVT['transl']['Chamber of Heart'] or zone == CVT['transl']['The Coreway'] then
 			CVT_HideF()
 		end
 	end
@@ -553,16 +552,16 @@ function CVT_OnUpdateFunction(self, deltaTime)
 
 	if IsRunning() == true then
 		PrintOutputTexts()
-		if zone == "Chamber of Heart" or zone == "The Coreway" then
+		if zone == CVT['transl']['Chamber of Heart'] or zone == CVT['transl']['The Coreway'] then
 			CVT_HideF()
 		end
 	else
-		if zone == "Vision of Stormwind" then
+		if zone == CVT['transl']['Vision of Stormwind'] then
 			CVT_ShowF()
 			ZONE = 'SW'
 			CRYSTALS = {0, 0, 0, 0, 0}
 			CHESTS = {0, 0, 0, 0, 0}
-		elseif zone == "Vision of Orgrimmar" then
+		elseif zone == CVT['transl']['Vision of Orgrimmar'] then
 			CVT_ShowF()
 			ZONE = 'OG'
 			CRYSTALS = {0, 0, 0, 0, 0}
