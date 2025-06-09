@@ -1,0 +1,19 @@
+name: Create Archive
+on:
+  push:
+    tags:
+      - 'v*'
+jobs:
+  build:
+    permissions: write-all
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository code
+      uses: actions/checkout@v3
+    - name: Zipping
+      run: zip CrystalVisionTracker-${{github.ref_name}}.zip Core.lua Config.lua MainFrame.xml LICENSE README.md CrystalVisionTracker.toc
+    - name: Create Release
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        token: ${{ secrets.GITHUB_TOKEN }}
+      run: gh release create "${{github.ref_name}}" "CrystalVisionTracker-${{github.ref_name}}.zip" -t "CrystalVisionTracker ${{github.ref_name}}"

@@ -1,5 +1,4 @@
 ---------------- Constants ----------------
-
 local MAX_PICKING_DISTANCE = 0.8
 
 local SW_FULL_LOC = {'Cathedral Square', 'Dwarven District', 'Old Town', 'Trade District', 'Mage Quarter'}
@@ -102,7 +101,7 @@ local TEXT_COLORS = {
 }
 
 local VIAL_COLORS = {
-	{0.0, 0.0, 0.0}, -- black
+	{0.8, 0.8, 0.8}, -- black
 	{0.2, 0.9, 0.2}, -- green
 	{0.9, 0.2, 0.2}, -- red
 	{0.2, 0.2, 0.9}, -- blue
@@ -110,9 +109,9 @@ local VIAL_COLORS = {
 }
 
 local SIZES = {
-	0.5, -- In different
-	0.6, -- In none
-	0.7 -- In
+	0.9, -- In different
+	1, -- In none
+	1.1 -- In
 }
 local CVT_TXT_FRAMES = nil
 local CVT_TXT_VALS_FRAMES = nil
@@ -432,7 +431,7 @@ end
 ---------------- Events functions ----------------
 local events = {}
 
-local targetCrystalSpellCast = nil
+local targetSpellCast = nil
 
 function events:UNIT_AURA(unitTarget, updateInfo)
 	print(updateInfo.addedAuras)
@@ -446,20 +445,23 @@ function events:UNIT_AURA(unitTarget, updateInfo)
 end
 
 function events:UNIT_SPELLCAST_SENT(unit, target, castGUID, spellID)
-	if unit == "player" and spellID == 143394 then
-		if target == "Odd Crystal" then
-			targetCrystalSpellCast = castGUID
+	if unit == "player" then
+		if spellID == 143394 and target == CVT['transl']['Odd Crystal'] then
+				targetSpellCast = castGUID
+		elseif spellID == 306608 and target == CVT['transl']['Black Empire Cache'] then
+				targetSpellCast = castGUID
 		end
 	end
 end
 
 function events:UNIT_SPELLCAST_SUCCEEDED(unitTarget, castGUID, spellID)
 	if unitTarget == "player" then
-		if targetCrystalSpellCast == castGUID and spellID == 143394 then
-			-- Picking up a crystal<>
-			CountPickedCrystal()
-		elseif spellID == 306608 then
-			CountPickedChest()
+		if targetSpellCast == castGUID then
+			if spellID == 143394 then
+				CountPickedCrystal()
+			elseif spellID == 306608 then
+				CountPickedChest()
+			end
 		end
 	end
 end
@@ -505,17 +507,17 @@ function events:ZONE_CHANGED_NEW_AREA()
 	local zone = GetMinimapZoneText()
 
 	if IsRunning() == false then
-		if zone == "Vision of Orgrimmar" then
+		if zone == CVT['transl']['Vision of Orgrimmar'] then
 			CVT_ShowF()
 			ZONE = 'OG'
 			CRYSTALS = {0, 0, 0, 0, 0}
-		elseif zone == "Vision of Stormwind" then
+		elseif zone == CVT['transl']['Vision of Stormwind'] then
 			CVT_ShowF()
 			ZONE = 'SW'
 			CRYSTALS = {0, 0, 0, 0, 0}
 		end
 	else
-		if zone == "Chamber of Heart" or zone == "The Coreway" then
+		if zone == CVT['transl']['Chamber of Heart'] or zone == CVT['transl']['The Coreway'] then
 			CVT_HideF()
 		end
 	end
@@ -550,16 +552,16 @@ function CVT_OnUpdateFunction(self, deltaTime)
 
 	if IsRunning() == true then
 		PrintOutputTexts()
-		if zone == "Chamber of Heart" or zone == "The Coreway" then
+		if zone == CVT['transl']['Chamber of Heart'] or zone == CVT['transl']['The Coreway'] then
 			CVT_HideF()
 		end
 	else
-		if zone == "Vision of Stormwind" then
+		if zone == CVT['transl']['Vision of Stormwind'] then
 			CVT_ShowF()
 			ZONE = 'SW'
 			CRYSTALS = {0, 0, 0, 0, 0}
 			CHESTS = {0, 0, 0, 0, 0}
-		elseif zone == "Vision of Orgrimmar" then
+		elseif zone == CVT['transl']['Vision of Orgrimmar'] then
 			CVT_ShowF()
 			ZONE = 'OG'
 			CRYSTALS = {0, 0, 0, 0, 0}

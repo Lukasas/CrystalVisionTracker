@@ -1,4 +1,7 @@
 print("Crystal Vision Tracker - Config loadindg...")
+
+CVT = CVT or {}
+
 -- Create the options panel frame
 local optionsPanel = CreateFrame("Frame", "CrystalVisionTrackerConfig", UIParent)
 optionsPanel.name = "CVT - Crystal Vision Tracker"
