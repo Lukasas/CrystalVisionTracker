@@ -98,35 +98,63 @@
 				<Anchors>
 					<Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeTo="CVT_Frame_Texts" />
 				</Anchors>
-				<Layers>
-					<Layer>
-						<FontString name="CVT_VIAL_BLACK_TXT" inherits="CVT_FontTemplate" text="Black Vial:">
-							<Anchors>
-								<Anchor point="TOPLEFT" relativeTo="$parent" x="0" y="0" />
-							</Anchors>
-						</FontString>
-						<FontString name="CVT_VIAL_GREEN_TXT" inherits="CVT_FontTemplate" text="Green Vial:">
-							<Anchors>
-								<Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT"  relativeTo="CVT_VIAL_BLACK_TXT" x="0" y="-8" />
-							</Anchors>
-						</FontString>
-						<FontString name="CVT_VIAL_RED_TXT" inherits="CVT_FontTemplate" text="Red Vial:">
-							<Anchors>
-								<Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT"  relativeTo="CVT_VIAL_GREEN_TXT" x="0" y="-8" />
-							</Anchors>
-						</FontString>
-						<FontString name="CVT_VIAL_BLUE_TXT" inherits="CVT_FontTemplate" text="Blue Vial:">
-							<Anchors>
-								<Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT"  relativeTo="CVT_VIAL_RED_TXT" x="0" y="-8" />
-							</Anchors>
-						</FontString>
-						<FontString name="CVT_VIAL_PURPLE_TXT" inherits="CVT_FontTemplate" text="Purple Vial:">
-							<Anchors>
-								<Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT"  relativeTo="CVT_VIAL_BLUE_TXT" x="0" y="-8" />
-							</Anchors>
-						</FontString>
-					</Layer>
-				</Layers>
+				<Frames>
+					<Button name="CVT_VIAL_BLACK_BTN">
+						<Size x="110" y="18" />
+						<Anchors>
+							<Anchor point="TOPLEFT" relativeTo="CVT_VIAL_Frame" x="0" y="0" />
+						</Anchors>
+						<Layers>
+							<Layer>
+								<FontString name="CVT_VIAL_BLACK_TXT" inherits="CVT_FontTemplate" text="Black Vial:"/>
+							</Layer>
+						</Layers>
+					</Button>
+					<Button name="CVT_VIAL_GREEN_BTN">
+						<Size x="110" y="18" />
+						<Anchors>
+							<Anchor point="TOPLEFT" relativeTo="CVT_VIAL_BLACK_TXT" relativePoint="BOTTOMLEFT" x="0" y="-8" />
+						</Anchors>
+						<Layers>
+							<Layer>
+								<FontString name="CVT_VIAL_GREEN_TXT" inherits="CVT_FontTemplate" text="Green Vial:"/>
+							</Layer>
+						</Layers>
+					</Button>
+					<Button name="CVT_VIAL_RED_BTN">
+						<Size x="110" y="18" />
+						<Anchors>
+							<Anchor point="TOPLEFT" relativeTo="CVT_VIAL_GREEN_TXT" relativePoint="BOTTOMLEFT" x="0" y="-8" />
+						</Anchors>
+						<Layers>
+							<Layer>
+								<FontString name="CVT_VIAL_RED_TXT" inherits="CVT_FontTemplate" text="Red Vial:"/>
+							</Layer>
+						</Layers>
+					</Button>
+					<Button name="CVT_VIAL_BLUE_BTN">
+						<Size x="110" y="18" />
+						<Anchors>
+							<Anchor point="TOPLEFT" relativeTo="CVT_VIAL_RED_TXT" relativePoint="BOTTOMLEFT" x="0" y="-8" />
+						</Anchors>
+						<Layers>
+							<Layer>
+								<FontString name="CVT_VIAL_BLUE_TXT" inherits="CVT_FontTemplate" text="Blue Vial:"/>
+							</Layer>
+						</Layers>
+					</Button>
+					<Button name="CVT_VIAL_PURPLE_BTN">
+						<Size x="110" y="18" />
+						<Anchors>
+							<Anchor point="TOPLEFT" relativeTo="CVT_VIAL_BLUE_TXT" relativePoint="BOTTOMLEFT" x="0" y="-8" />
+						</Anchors>
+						<Layers>
+							<Layer>
+								<FontString name="CVT_VIAL_PURPLE_TXT" inherits="CVT_FontTemplate" text="Purple Vial:"/>
+							</Layer>
+						</Layers>
+					</Button>
+				</Frames>
 			</Frame>
 			<Frame name="CVT_Frame_VIAL_Values" parent="CVT_Frame">
 				<Size x="250" y="150" />
