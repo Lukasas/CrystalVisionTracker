@@ -1,7 +1,7 @@
 ## Interface: 110107
 ## Title: Crystal Vision Tracker
 ## Notes: Tracking Horrific Vision Crystals
-## SavedVariablesPerCharacter: AddonPositionOffsets, EnablePoisonVialCheck, PoisonVialCheckMouseover
+## SavedVariablesPerCharacter: AddonPositionOffsets, CVT
 ## Author: Lukasas
 ## Version: 1.6.4
 Config.lua

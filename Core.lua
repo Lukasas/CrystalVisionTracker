@@ -1,8 +1,8 @@
 ---------------- Constants ----------------
 local MAX_PICKING_DISTANCE = 0.8
 
-local SW_FULL_LOC = {'Cathedral Square', 'Dwarven District', 'Old Town', 'Trade District', 'Mage Quarter'}
-local STORMWIND_LOCATIONS = { 'CATHEDRAL', 'DWARVEN', 'OLD TOWN', 'TRADE', 'MAGE'}
+-- local SW_FULL_LOC = {'Cathedral Square', 'Dwarven District', 'Old Town', 'Trade District', 'Mage Quarter'}
+-- local STORMWIND_LOCATIONS = { 'CATHEDRAL', 'DWARVEN', 'OLD TOWN', 'TRADE', 'MAGE'}
 local STORMWIND_POS = {
 	{1, {54.6, 59.4}},
 	{1, {53.0, 51.9}},
@@ -37,8 +37,8 @@ local STORMWIND_POISON_POS = {
 	{ 51.75, 58.52 }
 }
 
-local OG_FULL_LOC = {'Valley of Strength', 'Valley of Spirits', 'Valley of Wisdom', 'The Drag', 'Valley of Honor'}
-local ORGRIMMAR_LOCATIONS = { 'VSTRENGTH', 'SPIRITS', 'WISDOM', 'DRAG', 'HONOR'}
+-- local OG_FULL_LOC = {'Valley of Strength', 'Valley of Spirits', 'Valley of Wisdom', 'The Drag', 'Valley of Honor'}
+-- local ORGRIMMAR_LOCATIONS = { 'VSTRENGTH', 'SPIRITS', 'WISDOM', 'DRAG', 'HONOR'}
 local ORGRIMMAR_POS = {
 	{1, {53.5, 82.0}},
 	{1, {49.4, 68.7}},
@@ -67,22 +67,6 @@ local ORGRIMMAR_BOUNDRIES = {
 	{ {36.0, 40.0}, {36.4, 58.6}, {49.8, 57.0}, {51.5, 50.7}, {57.5, 42.1} },
 	{ {51.2, 61.6}, {53.8, 67.0}, {58.1, 72.0}, {66.0, 58.4}, {58.8, 42.0}, {52.5, 50.7} },
 	{ {59.2, 26.0}, {60.4, 43.4}, {67.4, 57.4}, {84.4, 40.0}, {72.6, 24.0} },
-}
-
-local VIAL_NAMES_LOC = {
-	black="Vial of Mysterious Black Liquid",
-	green="Vial of Mysterious Green Liquid",
-	red="Vial of Mysterious Red Liquid",
-	blue="Vial of Mysterious Blue Liquid",
-	purple="Vial of Mysterious Purple Liquid"
-}
-
-local VIAL_NAMES_SHORT_LOC = {
-	black="Black Vial",
-	green="Green Vial",
-	red="Red Vial",
-	blue="Blue Vial",
-	purple="Purple Vial"
 }
 
 local VIAL_VAL_STRINGS = {
@@ -134,9 +118,47 @@ SLASH_CTFIRE1 = "/ctfire"
 SLASH_CMOVE1 = "/cmove"
 SLASH_CHELP1 = "/chelp"
 SLASH_CTINTER1 = "/ctint"
+SLASH_CTLOC1 = "/ctloc"
 
 ---------------- Timers ----------------
 
+
+---------------- Localisation helpers ----------------
+
+-- Returns a localised string for the given key, or the key itself if not found
+local function LocaliseString(key)
+    return CVT['transl'][key] or key
+end
+
+local function GetStormwindLocations()
+    return {
+        LocaliseString("Cathedral Square"),
+        LocaliseString("Dwarven District"),
+        LocaliseString("Old Town"),
+        LocaliseString("Trade District"),
+        LocaliseString("Mage Quarter"),
+    }
+end
+
+local function GetOrgrimmarLocations()
+    return {
+        LocaliseString("Valley of Strength"),
+        LocaliseString("Valley of Spirits"),
+        LocaliseString("Valley of Wisdom"),
+        LocaliseString("The Drag"),
+        LocaliseString("Valley of Honor"),
+    }
+end
+
+local function GetVials()
+	return {
+		LocaliseString("Vial of Mysterious Black Liquid"),
+		LocaliseString("Vial of Mysterious Green Liquid"),
+		LocaliseString("Vial of Mysterious Red Liquid"),
+		LocaliseString("Vial of Mysterious Blue Liquid"),
+		LocaliseString("Vial of Mysterious Purple Liquid")
+	}
+end
 
 ---------------- Addon Functions ----------------
 
@@ -238,11 +260,11 @@ local function PrintOutputTexts()
 	local zoneID = 0
 	local lastZoneId = 0
 	if ZONE == 'SW' then
-		ARR = STORMWIND_LOCATIONS
+		ARR = GetStormwindLocations() -- STORMWIND_LOCATIONS
 		bounds = STORMWIND_BOUNDRIES
 		zoneID = 84
 	else
-		ARR = ORGRIMMAR_LOCATIONS
+		ARR = GetOrgrimmarLocations() -- ORGRIMMAR_LOCATIONS
 		bounds = ORGRIMMAR_BOUNDRIES
 		zoneID = 85
 	end
@@ -341,6 +363,40 @@ local function GetMouseoverTooltipText()
 	return text
 end
 
+local function SendPoisonStatus()
+	if not VIAL_SET then
+		return
+	end
+
+	local vialStatus = {}
+	for i=1,5 do
+		vialStatus[i] = CVT_VIAL_TXT_VALS_FRAMES[i]:GetText()
+	end
+
+	C_ChatInfo.SendAddonMessage("CVTPrivChat", "POISON:" .. table.concat(vialStatus, ","), "INSTANCE_CHAT")
+end
+
+local function SetPoisonFromChat(msg)
+	local vialStatus = {0, 0, 0, 0, 0}
+	if msg then
+		local statusStrings = {strsplit(",", msg)}
+		for i=1,5 do
+			if statusStrings[i] then
+				vialStatus[i] = tonumber(statusStrings[i]) or 0
+			end
+		end
+	end
+
+	for i=1,5 do
+		CVT_VIAL_TXT_FRAMES[i]:SetTextColor(VIAL_COLORS[i][1], VIAL_COLORS[i][2], VIAL_COLORS[i][3])
+		CVT_VIAL_TXT_VALS_FRAMES[i]:SetText(VIAL_VAL_STRINGS[vialStatus[i]])
+		CVT_VIAL_TXT_VALS_FRAMES[i]:SetTextColor(TEXT_COLORS[3][1], TEXT_COLORS[3][2], TEXT_COLORS[3][3])
+	end
+
+	VIAL_SET = true
+	CAN_CHECK_VIAL = false
+end
+
 local function CheckIfVial()
 	if not CAN_CHECK_VIAL then
 		-- print("You are not mousing over vial.")
@@ -361,19 +417,19 @@ local function CheckIfVial()
 
 	-- 0 == unknown, 1 == poison, 2 == sanity, 3 == defensive, 4 == healing, 5 == breath
 	local vials = { 0, 0, 0, 0, 0 } -- black, green, red, blue, purple
-	if text == VIAL_NAMES_LOC.black then
+	if text == CVT['transl']['Vial of Mysterious Black Liquid'] then
 		-- print("Found the " .. VIAL_NAMES_LOC.black .. "!")
 		vials = {1, 2, 3, 4, 5}
-	elseif text == VIAL_NAMES_LOC.green then
+	elseif text == CVT['transl']['Vial of Mysterious Green Liquid'] then
 		-- print("Found the " .. VIAL_NAMES_LOC.green .. "!")
 		vials = {5, 1, 2, 3, 4}
-	elseif text == VIAL_NAMES_LOC.red then
+	elseif text == CVT['transl']['Vial of Mysterious Red Liquid'] then
 		-- print("Found the " .. VIAL_NAMES_LOC.red .. "!")
 		vials = {4, 5, 1, 2, 3}
-	elseif text == VIAL_NAMES_LOC.blue then
+	elseif text == CVT['transl']['Vial of Mysterious Blue Liquid'] then
 		-- print("Found the " .. VIAL_NAMES_LOC.blue .. "!")
 		vials = {3, 4, 5, 1, 2}
-	elseif text == VIAL_NAMES_LOC.purple then
+	elseif text == CVT['transl']['Vial of Mysterious Purple Liquid'] then
 		-- print("Found the " .. VIAL_NAMES_LOC.purple .. "!")
 		vials = {2, 3, 4, 5, 1}
 	else
@@ -394,6 +450,7 @@ local function CheckIfVial()
 		-- CVT_VIAL_TXT_VALS_FRAMES[i]:SetTextHeight(size)
 	end
 
+	SendPoisonStatus()
 end
 
 local function IsMouseOverPoisonUnit(unitName)
@@ -470,7 +527,7 @@ function events:GLOBAL_MOUSE_DOWN(mouseButton)
 	if EnablePoisonVialCheck then
 		if mouseButton == "LeftButton" then
 			local objectName = GetMouseoverTooltipText()
-			for _, value in pairs(VIAL_NAMES_LOC) do
+			for _, value in pairs(GetVials()) do
 				if objectName == value then
 					-- print("You clicked on the " .. objectName .. ".")
 					CAN_CHECK_VIAL = true
@@ -499,7 +556,11 @@ end
 
 function events:UPDATE_MOUSEOVER_UNIT()
 	if EnablePoisonVialCheck and PoisonVialCheckMouseover then
-		IsMouseOverPoisonUnit("Morgan Pestle")
+		if ZONE == 'SW' then
+			IsMouseOverPoisonUnit(CVT['transl']['Morgan Pestle'])
+		elseif ZONE == 'OG' then
+			IsMouseOverPoisonUnit(CVT['transl']['Voidbound Ravager'])
+		end
 	end
 end
 
@@ -541,7 +602,7 @@ function events:CHAT_MSG_ADDON(prefix, message, channel, sender, target, zoneCha
 				CHESTS[index] = CHESTS[index] + 1
 			end
 		elseif msgType == "POISON" then
-
+			SetPoisonFromChat(data)
 		end
 	end
 end
@@ -614,6 +675,14 @@ local function helper(msg, editBox)
 	print("/csw - Stormwind (resets counting)\n/cog - Orgrimmar (resets counting)\n/cmove - Toggle moving the frame\n/chide - Hide stats")
 end
 SlashCmdList["CHELP"] = helper
+
+local function testLocalisation(msg, editBox)
+	for key, value in pairs(CVT['transl']) do
+		print(key .. ": " .. value)
+	end
+end
+SlashCmdList["CTLOC"] = testLocalisation
+
 
 function CVT_OnLoad()
 	LoadTextFrames()
