@@ -1,3 +1,8 @@
+--- TODO MASKS
+--- iii = C_UnitAuras.GetDebuffDataByIndex("player", 1)
+--- aid = iii['auraInstanceID']
+--- print(aid)
+--- print(C_TooltipInfo.GetUnitDebuffByAuraInstanceID("player", aid)['lines'][2]['leftText']) -- once in, not needed to refresh
 ---------------- Constants ----------------
 local MAX_PICKING_DISTANCE = 0.8
 
@@ -86,12 +91,12 @@ local VIAL_NAMES_SHORT_LOC = {
 }
 
 local VIAL_VAL_STRINGS = {
-	[0] = "Unknown",
-	[1] = "Poison",
-	[2] = "Sanity",
-	[3] = "Defensive",
-	[4] = "Healing",
-	[5] = "Fire Breath"
+	"Click the Poison",
+	"Poison",
+	"Sanity",
+	"Defensive",
+	"Healing",
+	"Fire Breath"
 }
 
 local TEXT_COLORS = {
@@ -115,6 +120,9 @@ local SIZES = {
 }
 local CVT_TXT_FRAMES = nil
 local CVT_TXT_VALS_FRAMES = nil
+local CVT_VIAL_TXT_FRAMES = nil
+local CVT_VIAL_TXT_VALS_FRAMES = nil
+local CVT_VIAL_TXT_VALS_BTNS = nil
 
 ---------------- Globals  ----------------
 
@@ -294,6 +302,7 @@ local function LoadTextFrames()
 	CVT_TXT_VALS_FRAMES = { CVT_TXT1_VALS, CVT_TXT2_VALS, CVT_TXT3_VALS, CVT_TXT4_VALS, CVT_TXT5_VALS }
 	CVT_VIAL_TXT_FRAMES = { CVT_VIAL_BLACK_TXT, CVT_VIAL_GREEN_TXT, CVT_VIAL_RED_TXT, CVT_VIAL_BLUE_TXT, CVT_VIAL_PURPLE_TXT }
 	CVT_VIAL_TXT_VALS_FRAMES = { CVT_VIAL_BLACK_TXT_VAL, CVT_VIAL_GREEN_TXT_VAL, CVT_VIAL_RED_TXT_VAL, CVT_VIAL_BLUE_TXT_VAL, CVT_VIAL_PURPLE_TXT_VAL }
+	CVT_VIAL_TXT_VALS_BTNS = { CVT_VIAL_BLACK_BTN, CVT_VIAL_GREEN_BTN, CVT_VIAL_RED_BTN, CVT_VIAL_BLUE_BTN, CVT_VIAL_PURPLE_BTN }
 end
 
 local function CVT_HideF()
@@ -341,6 +350,24 @@ local function GetMouseoverTooltipText()
 	return text
 end
 
+local function SetVials(poisonVialIdx)
+	local i = 0
+	for indexer=0,4 do
+		local fID = indexer + 1
+		if poisonVialIdx == nil then
+			i = 1
+			CVT_VIAL_TXT_VALS_FRAMES[fID]:SetTextColor(TEXT_COLORS[1][1], TEXT_COLORS[1][2], TEXT_COLORS[1][3])
+		else
+			i = math.fmod(6 - poisonVialIdx + indexer, 5) + 2
+			CVT_VIAL_TXT_VALS_FRAMES[fID]:SetTextColor(TEXT_COLORS[3][1], TEXT_COLORS[3][2], TEXT_COLORS[3][3])
+		end
+		CVT_VIAL_TXT_FRAMES[fID]:SetTextColor(VIAL_COLORS[fID][1], VIAL_COLORS[fID][2], VIAL_COLORS[fID][3])
+		CVT_VIAL_TXT_VALS_FRAMES[fID]:SetText(VIAL_VAL_STRINGS[i])
+		-- CVT_VIAL_TXT_FRAMES[i]:SetTextHeight(size)
+		-- CVT_VIAL_TXT_VALS_FRAMES[i]:SetTextHeight(size)
+	end
+end
+
 local function CheckIfVial()
 	if not CAN_CHECK_VIAL then
 		-- print("You are not mousing over vial.")
@@ -359,42 +386,27 @@ local function CheckIfVial()
 
 	local text = GetMouseoverTooltipText()
 
-	-- 0 == unknown, 1 == poison, 2 == sanity, 3 == defensive, 4 == healing, 5 == breath
-	local vials = { 0, 0, 0, 0, 0 } -- black, green, red, blue, purple
+	local poisonVial = 0
 	if text == VIAL_NAMES_LOC.black then
-		-- print("Found the " .. VIAL_NAMES_LOC.black .. "!")
-		vials = {1, 2, 3, 4, 5}
+		poisonVial = 1
 	elseif text == VIAL_NAMES_LOC.green then
-		-- print("Found the " .. VIAL_NAMES_LOC.green .. "!")
-		vials = {5, 1, 2, 3, 4}
+		poisonVial = 2
 	elseif text == VIAL_NAMES_LOC.red then
-		-- print("Found the " .. VIAL_NAMES_LOC.red .. "!")
-		vials = {4, 5, 1, 2, 3}
+		poisonVial = 3
 	elseif text == VIAL_NAMES_LOC.blue then
-		-- print("Found the " .. VIAL_NAMES_LOC.blue .. "!")
-		vials = {2, 3, 4, 5, 1}
+		poisonVial = 4
 	elseif text == VIAL_NAMES_LOC.purple then
-		-- print("Found the " .. VIAL_NAMES_LOC.purple .. "!")
-		vials = {1, 2, 3, 4, 5}
+		poisonVial = 5
 	else
-		-- print("Unknown item text: ", text)
 		CAN_CHECK_VIAL = false
 		return
 	end
 	VIAL_SET = true
 	CAN_CHECK_VIAL = false
-	-- print("Black: ", vials[1], " Green: ", vials[2], " Red: ", vials[3], " Blue: ", vials[4], " Purple: ", vials[5])
-
-	for i=1,5 do
-		CVT_VIAL_TXT_FRAMES[i]:SetTextColor(VIAL_COLORS[i][1], VIAL_COLORS[i][2], VIAL_COLORS[i][3])
-		CVT_VIAL_TXT_VALS_FRAMES[i]:SetText(VIAL_VAL_STRINGS[vials[i]])
-		CVT_VIAL_TXT_VALS_FRAMES[i]:SetTextColor(TEXT_COLORS[3][1], TEXT_COLORS[3][2], TEXT_COLORS[3][3])
-
-		-- CVT_VIAL_TXT_FRAMES[i]:SetTextHeight(size)
-		-- CVT_VIAL_TXT_VALS_FRAMES[i]:SetTextHeight(size)
-	end
+	SetVials(poisonVial)
 
 end
+
 
 local function IsMouseOverPoisonUnit(unitName)
 	local unitTarget = "mouseover"
@@ -507,14 +519,19 @@ function events:ZONE_CHANGED_NEW_AREA()
 	local zone = GetMinimapZoneText()
 
 	if IsRunning() == false then
+		SetVials(nil)
+		VIAL_SET = false
+		CAN_CHECK_VIAL = true
 		if zone == CVT['transl']['Vision of Orgrimmar'] then
 			CVT_ShowF()
 			ZONE = 'OG'
 			CRYSTALS = {0, 0, 0, 0, 0}
+			CHESTS = {0, 0, 0, 0, 0}
 		elseif zone == CVT['transl']['Vision of Stormwind'] then
 			CVT_ShowF()
 			ZONE = 'SW'
 			CRYSTALS = {0, 0, 0, 0, 0}
+			CHESTS = {0, 0, 0, 0, 0}
 		end
 	else
 		if zone == CVT['transl']['Chamber of Heart'] or zone == CVT['transl']['The Coreway'] then
@@ -556,6 +573,9 @@ function CVT_OnUpdateFunction(self, deltaTime)
 			CVT_HideF()
 		end
 	else
+		SetVials(nil)
+		VIAL_SET = false
+		CAN_CHECK_VIAL = true
 		if zone == CVT['transl']['Vision of Stormwind'] then
 			CVT_ShowF()
 			ZONE = 'SW'
@@ -615,9 +635,26 @@ local function helper(msg, editBox)
 end
 SlashCmdList["CHELP"] = helper
 
+local function onVialTextClick(self, button, down)
+	print("OnClick", button, down, self:GetText())
+end
+
+local function RegisterVialsClicks()
+	for i=1,5 do
+		CVT_VIAL_TXT_VALS_BTNS[i]:RegisterForClicks("LeftButtonUp")
+		CVT_VIAL_TXT_VALS_BTNS[i]:SetScript("OnClick", function(self, button, down)
+			if button == "LeftButton" then
+				SetVials(i)
+			end
+		end)
+	end
+end
+
 function CVT_OnLoad()
 	LoadTextFrames()
+	RegisterVialsClicks()
 	CVT_HideF()
+	SetVials(nil)
 
 	C_ChatInfo.RegisterAddonMessagePrefix("CVTPrivChat")
 end
