@@ -1,6 +1,6 @@
 local translations = {
     ['enUS'] = {
-        ["OddCrystal"] = "Odd Crystal",
+        ["Odd Crystal"] = "Odd Crystal",
         ["Morgan Pestle"] = "Morgan Pestle",
         ["Vision of Orgrimmar"] = "Vision of Orgrimmar",
         ["Vision of Stormwind"] = "Vision of Stormwind",
