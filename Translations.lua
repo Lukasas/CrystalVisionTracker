@@ -287,10 +287,10 @@ local translations = {
     }
 }
 
-print("CrystalVisionTracker: Loading translations for " .. GetLocale())
+-- print("CrystalVisionTracker: Loading translations for " .. GetLocale())
 CVT = CVT or {}
-CVT['transl'] = translations[GetLocale()] or translations['enUS']
-print("CrystalVisionTracker: Loaded " .. GetLocale() .. " translations")
+CVT.transl = translations[GetLocale()] or translations['enUS']
+-- print("CrystalVisionTracker: Loaded " .. GetLocale() .. " translations")
 
 -- Key by localised string, then by locale
 -- local translations = {

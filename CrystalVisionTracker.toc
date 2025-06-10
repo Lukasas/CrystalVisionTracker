@@ -1,9 +1,9 @@
 ## Interface: 110107
 ## Title: Crystal Vision Tracker
 ## Notes: Tracking Horrific Vision Crystals
-## SavedVariablesPerCharacter: AddonPositionOffsets, CVT
+## SavedVariablesPerCharacter: CVT_Config
 ## Author: Lukasas
-## Version: 1.6.4
+## Version: 1.6.5
 Config.lua
 Translations.lua
 MainFrame.xml

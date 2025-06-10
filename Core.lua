@@ -343,9 +343,14 @@ end
 local function CVT_ShowF()
 	CVT_Frame:SetAlpha(1)
 	CVT_Frame:Show()
-	if AddonPositionOffsets then
+
+	for key, value in pairs(CVT_Config.positionOffset) do
+		print(key .. ":" .. value)
+	end
+
+	if CVT_Config.positionOffset and #CVT_Config.positionOffset == 5 then
 		CVT_Frame:ClearAllPoints()
-		CVT_Frame:SetPoint(unpack(AddonPositionOffsets))
+		CVT_Frame:SetPoint(unpack(CVT_Config.positionOffset))
 	end
 
 	EnablePoisonVialCheck = EnablePoisonVialCheck or true
@@ -354,7 +359,7 @@ end
 
 function CVT_SavePosition()
 	local point, relativeTo, relativePoint, xOfs, yOfs = CVT_Frame:GetPoint(1)
-	AddonPositionOffsets = {point, relativeTo, relativePoint, xOfs, yOfs}
+	CVT_Config.positionOffset = {point, relativeTo, relativePoint, xOfs, yOfs}
 	-- print("saved")
 end
 
@@ -372,38 +377,12 @@ local function GetMouseoverTooltipText()
 	return text
 end
 
-local function SendPoisonStatus()
+local function SendPoisonStatus(poisonIdx)
 	if not VIAL_SET then
 		return
 	end
 
-	local vialStatus = {}
-	for i=1,5 do
-		vialStatus[i] = CVT_VIAL_TXT_VALS_FRAMES[i]:GetText()
-	end
-
-	C_ChatInfo.SendAddonMessage("CVTPrivChat", "POISON:" .. table.concat(vialStatus, ","), "INSTANCE_CHAT")
-end
-
-local function SetPoisonFromChat(msg)
-	local vialStatus = {0, 0, 0, 0, 0}
-	if msg then
-		local statusStrings = {strsplit(",", msg)}
-		for i=1,5 do
-			if statusStrings[i] then
-				vialStatus[i] = tonumber(statusStrings[i]) or 0
-			end
-		end
-	end
-
-	for i=1,5 do
-		CVT_VIAL_TXT_FRAMES[i]:SetTextColor(VIAL_COLORS[i][1], VIAL_COLORS[i][2], VIAL_COLORS[i][3])
-		CVT_VIAL_TXT_VALS_FRAMES[i]:SetText(VIAL_VAL_STRINGS[vialStatus[i]])
-		CVT_VIAL_TXT_VALS_FRAMES[i]:SetTextColor(TEXT_COLORS[3][1], TEXT_COLORS[3][2], TEXT_COLORS[3][3])
-	end
-
-	VIAL_SET = true
-	CAN_CHECK_VIAL = false
+	C_ChatInfo.SendAddonMessage("CVTPrivChat", "POISON:" .. poisonIdx, "INSTANCE_CHAT")
 end
 
 local function SetVials(poisonVialIdx)
@@ -460,7 +439,7 @@ local function CheckIfVial()
 	VIAL_SET = true
 	CAN_CHECK_VIAL = false
 	SetVials(poisonVial)
-	SendPoisonStatus()
+	SendPoisonStatus(poisonVial)
 
 end
 
@@ -619,7 +598,8 @@ function events:CHAT_MSG_ADDON(prefix, message, channel, sender, target, zoneCha
 				CHESTS[index] = CHESTS[index] + 1
 			end
 		elseif msgType == "POISON" then
-			SetPoisonFromChat(data)
+			local index = tonumber(data)
+			SetVials(index)
 		end
 	end
 end
@@ -697,6 +677,12 @@ end
 SlashCmdList["CHELP"] = helper
 
 local function testLocalisation(msg, editBox)
+	print("Testing localisation:")
+	if not CVT['transl'] then
+		print("No localisation data found.")
+		return
+	end
+
 	for key, value in pairs(CVT['transl']) do
 		print(key .. ": " .. value)
 	end

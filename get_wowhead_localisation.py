@@ -30,7 +30,7 @@ def get_names_for_all_languages_from_url(url):
     query_object = url.split(base_url)[-1]
 
     print(f"Processing URL: {url}")
-    results['us'] = get_heading_from_url(url)
+    results['enUS'] = get_heading_from_url(url)
 
     # Other languages
     for lang in languages:
@@ -41,7 +41,7 @@ def get_names_for_all_languages_from_url(url):
     return results
 
 def to_lua_table(name, lines):
-    lua_lines = [f"[\"{name}\"] {{"]
+    lua_lines = ["{"]
     for k, v in lines.items():
         v_escaped = (v or "").replace('"', '\\"')
         lua_lines.append(f'    {k} = "{v_escaped}",')
@@ -69,4 +69,5 @@ if __name__ == "__main__":
             lua_table[name] = to_lua_table(name, names)
         except Exception as e:
             print(f"Error: {e}")
-    print(lua_table)
+    for k,v in lua_table.items():
+        print(f"[\"{k}\"] = {v},")

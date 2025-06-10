@@ -1,10 +1,18 @@
 print("Crystal Vision Tracker - Config loading...")
 
+-- Load the saved variables table
+CVT_Config = CVT_Config or {
+    positionOffset = {},
+    poison = {
+        enabled = true,  -- Default to enabled
+        mouseover = false -- Default to disabled
+    }
+}
 -- Setup the CVT variables table with default values if it doesn't exist
 CVT = CVT or {}
-CVT.poison = CVT.poison or {}
-CVT.poison.enabled = CVT.poison.enabled or true
-CVT.poison.mouseover = CVT.poison.mouseover or false
+CVT.poison = CVT.poison or CVT_Config.poison or {}
+-- CVT.poison.enabled = CVT.poison.enabled or true
+-- CVT.poison.mouseover = CVT.poison.mouseover or false
 
 -- Create the options panel frame
 local optionsPanel = CreateFrame("Frame", "CrystalVisionTrackerConfig", UIParent)
@@ -25,14 +33,14 @@ description:SetPoint("TOPLEFT", 20, -20)
 
 -- Add an option for enabling/disabling the poison checking feature
 local enableCheckButton = CreateFrame("CheckButton", nil, optionsPanel, "InterfaceOptionsCheckButtonTemplate")
-enableCheckButton:SetPoint("TOPLEFT", description, "BOTTOMLEFT", 0, -20)
+enableCheckButton:SetPoint("TOPLEFT", description, "BOTTOMLEFT", 0, -16)
 enableCheckButton.Text:SetText("Enable poison checking")
 enableCheckButton.tooltip = "Enable events for checking poison vial."
 enableCheckButton:SetChecked(CVT.poison.enabled)
 
 -- Add an option for enabling/disabling mouseover poison checking
 local mouseoverCheckButton = CreateFrame("CheckButton", nil, optionsPanel, "InterfaceOptionsCheckButtonTemplate")
-mouseoverCheckButton:SetPoint("TOPLEFT", enableCheckButton, "BOTTOMLEFT", 0, -10)
+mouseoverCheckButton:SetPoint("TOPLEFT", enableCheckButton, "BOTTOMLEFT", 10, -8)
 mouseoverCheckButton.Text:SetText("Enable mouseover poison checking")
 mouseoverCheckButton.tooltip = "Enable poison checking when hovering over units. If disabled, poison checking will only occur when the player left clicks on a unit."
 mouseoverCheckButton:SetChecked(CVT.poison.mouseover)
@@ -40,18 +48,20 @@ mouseoverCheckButton:SetChecked(CVT.poison.mouseover)
 
 enableCheckButton:SetScript("OnClick", function(self)
     CVT.poison.enabled = self:GetChecked()
+    CVT_Poison_Config = CVT.poison.enabled
     if CVT.poison.enabled then
-        print("Poison checking enabled.")
+        -- print("Poison checking enabled.")
         mouseoverCheckButton:Enable()
     else
-        print("Poison checking disabled.")
+        -- print("Poison checking disabled.")
         mouseoverCheckButton:Disable()
-        print("Mouseover poison checking disabled.")
+        -- print("Mouseover poison checking disabled.")
     end
 end)
 
 mouseoverCheckButton:SetScript("OnClick", function(self)
     CVT.poison.mouseover = self:GetChecked()
+    CVT_Poison_Config.mouseover = CVT.poison.mouseover
 end)
 
 print("Crystal Vision Tracker - Config loaded successfully.")
