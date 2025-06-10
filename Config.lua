@@ -1,4 +1,4 @@
--- print("Crystal Vision Tracker - Config loading...")
+print("Crystal Vision Tracker - Config loading...")
 
 -- Setup the CVT variables table with default values if it doesn't exist
 CVT = CVT or {}
@@ -54,4 +54,4 @@ mouseoverCheckButton:SetScript("OnClick", function(self)
     CVT.poison.mouseover = self:GetChecked()
 end)
 
--- print("Crystal Vision Tracker - Config loaded successfully.")
+print("Crystal Vision Tracker - Config loaded successfully.")

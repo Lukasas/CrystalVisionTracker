@@ -1,5 +1,5 @@
 local translations = {
-    enUS = {
+    ["enUS"] = {
         ["Odd Crystal"] = "Odd Crystal",
         ["Black Empire Cache"] = "Black Empire Cache",
         ["Vision of Orgrimmar"] = "Vision of Orgrimmar",
@@ -25,7 +25,7 @@ local translations = {
         ["Grommash Hold"] = "Grommash Hold",
         ["The Coreway"] = "The Coreway",
     },
-    frFR = {
+    ["frFR"] = {
         ["Odd Crystal"] = "Cristal étrange",
         ["Black Empire Cache"] = "Cache de l’Empire noir",
         ["Vision of Orgrimmar"] = "Vision d’Orgrimmar",
@@ -51,7 +51,7 @@ local translations = {
         ["Grommash Hold"] = "Fort Grommash",
         ["The Coreway"] = "Voie du noyau",
     },
-    deDE = {
+    ["deDE"] = {
         ["Odd Crystal"] = "Seltsamer Kristall",
         ["Black Empire Cache"] = "Truhe des Schwarzen Imperiums",
         ["Vision of Orgrimmar"] = "Vision von Orgrimmar",
@@ -77,7 +77,7 @@ local translations = {
         ["Grommash Hold"] = "Feste Grommash",
         ["The Coreway"] = "Kernweg",
     },
-    esES = {
+    ["esES"] = {
         ["Odd Crystal"] = "Cristal extraño",
         ["Black Empire Cache"] = "Alijo del Imperio Negro",
         ["Vision of Orgrimmar"] = "Visión de Orgrimmar",
@@ -103,7 +103,7 @@ local translations = {
         ["Grommash Hold"] = "Bastión Grommash",
         ["The Coreway"] = "Camino del núcleo",
     },
-    esMX = {
+    ["esMX"] = {
         ["Odd Crystal"] = "Cristal extraño",
         ["Black Empire Cache"] = "Alijo del Imperio Negro",
         ["Vision of Orgrimmar"] = "Visión de Orgrimmar",
@@ -129,7 +129,7 @@ local translations = {
         ["Grommash Hold"] = "Bastión Grommash",
         ["The Coreway"] = "Camino del núcleo",
     },
-    itIT = {
+    ["itIT"] = {
         ["Odd Crystal"] = "Cristallo Strano",
         ["Black Empire Cache"] = "Cassa dell'Impero Nero",
         ["Vision of Orgrimmar"] = "Visione di Orgrimmar",
@@ -155,7 +155,7 @@ local translations = {
         ["Grommash Hold"] = "Roccaforte di Grommash",
         ["The Coreway"] = "Via del nucleo",
     },
-    ptBR = {
+    ["ptBR"] = {
         ["Odd Crystal"] = "Cristal Estranho",
         ["Black Empire Cache"] = "Depósito do Império Negro",
         ["Vision of Orgrimmar"] = "Visão de Orgrimmar",
@@ -181,7 +181,7 @@ local translations = {
         ["Grommash Hold"] = "Castelo Grommash",
         ["The Coreway"] = "Caminho do núcleo",
     },
-    ruRU = {
+    ["ruRU"] = {
         ["Odd Crystal"] = "Странный кристалл",
         ["Black Empire Cache"] = "Тайник Темной Империи",
         ["Vision of Orgrimmar"] = "Видение Оргриммара",
@@ -207,7 +207,7 @@ local translations = {
         ["Grommash Hold"] = "Крепость Громмаш",
         ["The Coreway"] = "Путь ядра",
     },
-    zhCN = {
+    ["zhCN"] = {
         ["Odd Crystal"] = "怪异水晶",
         ["Black Empire Cache"] = "黑暗帝国宝箱",
         ["Vision of Orgrimmar"] = "奥格瑞玛的幻象",
@@ -233,7 +233,7 @@ local translations = {
         ["Grommash Hold"] = "格罗玛什要塞",
         ["The Coreway"] = "核心之道",
     },
-    zhTW = {
+    ["zhTW"] = {
         ["Odd Crystal"] = "奇怪的水晶",
         ["Black Empire Cache"] = "黑暗帝國寶箱",
         ["Vision of Orgrimmar"] = "奧格瑪幻象",
@@ -259,7 +259,7 @@ local translations = {
         ["Grommash Hold"] = "葛羅瑪許堡",
         ["The Coreway"] = "核心之道",
     },
-    koKR = {
+    ["koKR"] = {
         ["Odd Crystal"] = "기이한 수정",
         ["Black Empire Cache"] = "검은 제국 보관함",
         ["Vision of Orgrimmar"] = "오그리마의 환영",
@@ -287,8 +287,10 @@ local translations = {
     }
 }
 
+print("CrystalVisionTracker: Loading translations for " .. GetLocale())
 CVT = CVT or {}
 CVT['transl'] = translations[GetLocale()] or translations['enUS']
+print("CrystalVisionTracker: Loaded " .. GetLocale() .. " translations")
 
 -- Key by localised string, then by locale
 -- local translations = {
