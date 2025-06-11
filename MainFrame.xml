@@ -197,6 +197,7 @@
 			<OnLoad>
 				self:RegisterForDrag("LeftButton")
 				self:RegisterEvent("UNIT_SPELLCAST_SENT")
+				self:RegisterEvent("UNIT_SPELLCAST_FAILED_QUIET")
 				self:RegisterEvent("UNIT_SPELLCAST_SUCCEEDED")
 				self:RegisterEvent("ZONE_CHANGED_NEW_AREA")
 				self:RegisterEvent("CHAT_MSG_ADDON")
