@@ -10,7 +10,7 @@
 	<!-- <FontString name="CVT_FontTemplate" font="Fonts\FRIZQT__.TTF" text="A" justifyH="LEFT" justifyV="TOP"  virtual="True"> -->
 	<FontString name="CVT_FontTemplate" font="Fonts\2002.TTF" text="A" outline="NORMAL" justifyH="LEFT" justifyV="TOP"  virtual="True">
 		<Color r="1" g="0" b="0" a="1"/>
-		<FontHeight val="18"/>
+		<FontHeight val="16"/>
 		<Shadow>
 			<Offset x="2" y="2" />
 			<Color r="0" g="0" b="0" a="1"/>
@@ -24,7 +24,7 @@
 		</Anchors>
 		<Frames>
 			<Frame name="CVT_Frame_Texts" parent="CVT_Frame">
-				<Size x="110" y="140" />
+				<Size x="120" y="130" />
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeTo="$parent" x="0" y="0" />
 				</Anchors>
@@ -94,13 +94,13 @@
 				</Layers>
 			</Frame>
 			<Frame name="CVT_VIAL_Frame" parent="CVT_Frame">
-				<Size x="110" y="180" />
+				<Size x="120" y="180" />
 				<Anchors>
 					<Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeTo="CVT_Frame_Texts" />
 				</Anchors>
 				<Frames>
 					<Button name="CVT_VIAL_BLACK_BTN">
-						<Size x="110" y="18" />
+						<Size x="110" y="16" />
 						<Anchors>
 							<Anchor point="TOPLEFT" relativeTo="CVT_VIAL_Frame" x="0" y="0" />
 						</Anchors>
@@ -111,7 +111,7 @@
 						</Layers>
 					</Button>
 					<Button name="CVT_VIAL_GREEN_BTN">
-						<Size x="110" y="18" />
+						<Size x="110" y="16" />
 						<Anchors>
 							<Anchor point="TOPLEFT" relativeTo="CVT_VIAL_BLACK_TXT" relativePoint="BOTTOMLEFT" x="0" y="-8" />
 						</Anchors>
@@ -122,7 +122,7 @@
 						</Layers>
 					</Button>
 					<Button name="CVT_VIAL_RED_BTN">
-						<Size x="110" y="18" />
+						<Size x="110" y="16" />
 						<Anchors>
 							<Anchor point="TOPLEFT" relativeTo="CVT_VIAL_GREEN_TXT" relativePoint="BOTTOMLEFT" x="0" y="-8" />
 						</Anchors>
@@ -133,7 +133,7 @@
 						</Layers>
 					</Button>
 					<Button name="CVT_VIAL_BLUE_BTN">
-						<Size x="110" y="18" />
+						<Size x="110" y="16" />
 						<Anchors>
 							<Anchor point="TOPLEFT" relativeTo="CVT_VIAL_RED_TXT" relativePoint="BOTTOMLEFT" x="0" y="-8" />
 						</Anchors>
@@ -144,7 +144,7 @@
 						</Layers>
 					</Button>
 					<Button name="CVT_VIAL_PURPLE_BTN">
-						<Size x="110" y="18" />
+						<Size x="110" y="16" />
 						<Anchors>
 							<Anchor point="TOPLEFT" relativeTo="CVT_VIAL_BLUE_TXT" relativePoint="BOTTOMLEFT" x="0" y="-8" />
 						</Anchors>
