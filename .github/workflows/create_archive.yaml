@@ -11,7 +11,7 @@ jobs:
     - name: Checkout repository code
       uses: actions/checkout@v3
     - name: Zipping
-      run: zip CrystalVisionTracker-${{github.ref_name}}.zip Core.lua Config.lua MainFrame.xml LICENSE README.md CrystalVisionTracker.toc
+      run: zip CrystalVisionTracker-${{github.ref_name}}.zip Core.lua Config.lua MainFrame.xml LICENSE README.md CrystalVisionTracker.toc Translations.lua
     - name: Create Release
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
