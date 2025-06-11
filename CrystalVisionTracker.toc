@@ -7,4 +7,3 @@
 Config.lua
 Translations.lua
 MainFrame.xml
-Core.lua

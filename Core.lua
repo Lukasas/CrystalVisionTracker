@@ -330,9 +330,6 @@ end
 local function CVT_HideF()
 	CAN_CHECK_VIAL = false
 	VIAL_SET = false
-	for i=1,5 do
-		CVT_TXT_FRAMES[i]:SetText('')
-	end
 	CVT_Frame:SetAlpha(0)
 	CVT_Frame:Hide()
 	movable = false
