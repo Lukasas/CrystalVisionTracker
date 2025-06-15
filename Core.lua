@@ -127,6 +127,7 @@ SLASH_CMOVE1 = "/cmove"
 SLASH_CHELP1 = "/chelp"
 SLASH_CTINTER1 = "/ctint"
 SLASH_CTLOC1 = "/ctloc"
+SLASH_CVRST1 = "/cvrst"
 
 ---------------- Timers ----------------
 
@@ -341,17 +342,17 @@ local function CVT_ShowF()
 	CVT_Frame:SetAlpha(1)
 	CVT_Frame:Show()
 
-	for key, value in pairs(CVT_Config.positionOffset) do
-		print(key .. ":" .. value)
-	end
+	-- for key, value in pairs(CVT_Config.positionOffset) do
+	-- 	print(key .. ":" .. value)
+	-- end
 
 	if CVT_Config.positionOffset and #CVT_Config.positionOffset == 5 then
 		CVT_Frame:ClearAllPoints()
 		CVT_Frame:SetPoint(unpack(CVT_Config.positionOffset))
 	end
 
-	EnablePoisonVialCheck = EnablePoisonVialCheck or true
-	PoisonVialCheckMouseover = PoisonVialCheckMouseover or false
+	CVT.poison.enabled = CVT.poison.enabled or true
+	CVT.poison.mouseover = CVT.poison.mouseover or false
 end
 
 function CVT_SavePosition()
@@ -446,24 +447,22 @@ local function IsMouseOverPoisonUnit(unitName)
 	if UnitExists(unitTarget) then
 		local name = UnitName(unitTarget)
 		if name then
-			-- print("You are mousing over: ", name)
 			if name == unitName then
 				CAN_CHECK_VIAL = true
-				-- if PoisonVialCheckMouseover then
+				-- if CVT.poison.mouseover then
 				-- 	-- print(unitName, " found! You can check the vial now.")
 				-- else
 				-- 	-- print("You clicked on the ", unitName)
 				-- end
 			else
 				CAN_CHECK_VIAL = false
-				-- if PoisonVialCheckMouseover then
+				-- if CVT.poison.mouseover then
 				-- 	-- print("You are not mousing over ", unitName, ", to check the vial.")
 				-- else
 				-- 	-- print("You have not clicked on the ", unitName)
 				-- end
 			end
 		else
-			-- print("You are not mousing over any unit.")
 			CAN_CHECK_VIAL = false
 		end
 	end
@@ -477,6 +476,33 @@ end
 local events = {}
 
 local targetSpellCast = {}
+
+function events:ADDON_LOADED(addonName)
+	if addonName == "CrystalVisionTracker" then
+        -- Load the saved variables table
+        if CVT_Config == nil then
+            CVT_Config = {
+                positionOffset = {},
+                poison = {
+                    enabled = true,  -- Default to enabled
+                    mouseover = false -- Default to disabled
+                }
+            }
+        end
+        -- Setup the CVT variables table with default values if it doesn't exist
+        CVT = CVT or {}
+        CVT.poison = CVT_Config.poison
+        -- CVT.poison.enabled = CVT.poison.enabled or true
+        -- CVT.poison.mouseover = CVT.poison.mouseover or false
+		CVT_vialCheckButtonFrame:SetChecked(CVT.poison.enabled)
+		CVT_vialMouseoverCheckButtonFrame:SetChecked(CVT.poison.mouseover)
+	end
+end
+
+function events:PLAYER_LOGOUT()
+	CVT_Config.positionOffset = CVT.positionOffset or CVT_Config.positionOffset or {}
+	CVT_Config.poison = CVT.poison or CVT_Config.poison or {}
+end
 
 function events:UNIT_AURA(unitTarget, updateInfo)
 	print(updateInfo.addedAuras)
@@ -515,7 +541,7 @@ function events:UNIT_SPELLCAST_SUCCEEDED(unitTarget, castGUID, spellID)
 end
 
 function events:GLOBAL_MOUSE_DOWN(mouseButton)
-	if EnablePoisonVialCheck then
+	if CVT.poison.enabled then
 		if mouseButton == "LeftButton" then
 			local objectName = GetMouseoverTooltipText()
 			for _, value in pairs(GetVials()) do
@@ -530,7 +556,7 @@ function events:GLOBAL_MOUSE_DOWN(mouseButton)
 end
 
 function events:GLOBAL_MOUSE_UP(mouseButton)
-	if EnablePoisonVialCheck then
+	if CVT.poison.enabled then
 		if mouseButton == "LeftButton" then
 			CheckIfVial()
 		end
@@ -538,7 +564,7 @@ function events:GLOBAL_MOUSE_UP(mouseButton)
 end
 
 function events:WORLD_CURSOR_TOOLTIP_UPDATE(itemType)
-	if EnablePoisonVialCheck and PoisonVialCheckMouseover then
+	if CVT.poison.enabled and CVT.poison.mouseover then
 		if itemType == Enum.WorldCursorAnchorType.Cursor then
 			CheckIfVial()
 		end
@@ -546,7 +572,7 @@ function events:WORLD_CURSOR_TOOLTIP_UPDATE(itemType)
 end
 
 function events:UPDATE_MOUSEOVER_UNIT()
-	if EnablePoisonVialCheck and PoisonVialCheckMouseover then
+	if CVT.poison.enabled and CVT.poison.mouseover then
 		if ZONE == 'SW' then
 			IsMouseOverPoisonUnit(CVT['transl']['Morgan Pestle'])
 		elseif ZONE == 'OG' then
@@ -671,8 +697,16 @@ local function movability(msg, editBox)
 end
 SlashCmdList["CMOVE"] = movability
 
+local function resetVial(msg, editBox)
+	SetVials(nil)
+	VIAL_SET = false
+	CAN_CHECK_VIAL = true
+	print("Vials reset.")
+end
+SlashCmdList["CVRST"] = resetVial
+
 local function helper(msg, editBox)
-	print("/csw - Stormwind (resets counting)\n/cog - Orgrimmar (resets counting)\n/cmove - Toggle moving the frame\n/chide - Hide stats")
+	print("/csw - Stormwind (resets counting)\n/cog - Orgrimmar (resets counting)\n/cmove - Toggle moving the frame\n/chide - Hide stats\n/cvrst - Reset vials\n/ctloc - Test print current localised texts")
 end
 SlashCmdList["CHELP"] = helper
 
