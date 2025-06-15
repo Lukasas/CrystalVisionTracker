@@ -48,7 +48,7 @@ mouseoverCheckButton:SetChecked(CVT.poison.mouseover)
 
 enableCheckButton:SetScript("OnClick", function(self)
     CVT.poison.enabled = self:GetChecked()
-    CVT_Poison_Config = CVT.poison.enabled
+    CVT_Config.poison = CVT.poison.enabled
     if CVT.poison.enabled then
         -- print("Poison checking enabled.")
         mouseoverCheckButton:Enable()
@@ -61,7 +61,7 @@ end)
 
 mouseoverCheckButton:SetScript("OnClick", function(self)
     CVT.poison.mouseover = self:GetChecked()
-    CVT_Poison_Config.mouseover = CVT.poison.mouseover
+    CVT_Config.mouseover = CVT.poison.mouseover
 end)
 
 print("Crystal Vision Tracker - Config loaded successfully.")
