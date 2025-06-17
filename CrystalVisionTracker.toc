@@ -3,7 +3,7 @@
 ## Notes: Tracking Horrific Vision Crystals
 ## SavedVariables: CVT_Config
 ## Author: Lukasas, OblizPrst
-## Version: 1.6.9
+## Version: 1.6.10
 Config.lua
 Translations.lua
 MainFrame.xml
