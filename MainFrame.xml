@@ -196,6 +196,8 @@
 		<Scripts>
 			<OnLoad>
 				self:RegisterForDrag("LeftButton")
+				self:RegisterEvent("ADDON_LOADED")
+				self:RegisterEvent("PLAYER_LOGOUT")
 				self:RegisterEvent("UNIT_SPELLCAST_SENT")
 				self:RegisterEvent("UNIT_SPELLCAST_FAILED_QUIET")
 				self:RegisterEvent("UNIT_SPELLCAST_SUCCEEDED")
