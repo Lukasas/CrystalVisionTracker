@@ -2,8 +2,8 @@
 ## Title: Crystal Vision Tracker
 ## Notes: Tracking Horrific Vision Crystals
 ## SavedVariables: CVT_Config
-## Author: Lukasas
-## Version: 1.6.8
+## Author: Lukasas, OblizPrst
+## Version: 1.6.9
 Config.lua
 Translations.lua
 MainFrame.xml
